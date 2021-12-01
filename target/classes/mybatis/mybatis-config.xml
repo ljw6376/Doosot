@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 클래스 별명 짓기 -->
+	<typeAliases>
+		<typeAlias type="member.bean.MemberDTO" alias="memberdto"/>
+		<typeAlias type="member.bean.MemberQnADTO" alias="memberqnadto"/>
+		<typeAlias type="event.bean.EventDTO" alias="eventDto"/>
+		<typeAlias type="loca.bean.LocaDTO" alias="locaDto"/>
+		<typeAlias type="menu.dto.MenuDTO" alias="menuDTO"/>
+		<typeAlias type="cart.dto.CartDTO" alias="cartDTO"/>
+		<typeAlias type="order.dto.OrderDTO" alias="orderDTO"/>
+		<typeAlias type="cartList.dto.CartListDTO" alias="cartListDTO"/>
+		<typeAlias type="orderList.dto.OrderListDTO" alias="orderListDTO"/>
+		<typeAlias type="orderList.dto.GetOrderListDTO" alias="getOrderListDTO"/>
+		<typeAlias type="faq.bean.FAQDTO" alias="faqdto"/>
+		<typeAlias type="qna.bean.QnADTO" alias="qnadto"/>
+		<typeAlias type="re.bean.ReDTO" alias="redto"/>
+	</typeAliases>
+	
+	<!-- SQL Mapper 설정 -->
+	<mappers>
+		<mapper resource="mybatis/member-mapping.xml" />
+		<mapper resource="mybatis/event_mapping.xml" />
+		<mapper resource="mybatis/loca_mapping.xml" />
+		<mapper resource="mybatis/mapping.xml" />
+		<mapper resource="mybatis/faqmapping.xml" />
+		<mapper resource="mybatis/qnamapping.xml" />
+		<!-- <mapper resource="mybatis/member-mapping.xml"/> 테이블 추가할때마다 이렇게 추가 -->
+	</mappers>
+</configuration>

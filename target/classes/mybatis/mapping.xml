@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mybatis.DooSotMapper">
+	<!-- 메뉴 -->
+	<insert id="menuWrite" parameterType="menuDTO">
+		insert into menu 
+		values(#{menu_num}, #{menu_name}, #{menu_img}, 
+		#{menu_price}, #{menu_content}, sysdate, 
+		#{menu_ingre}, #{menu_kcal}, #{menu_category},1)
+	</insert>
+	<select id="menuListAll" resultType="menuDTO">	
+		<!-- 전체메뉴를 날짜별로 내림차순 -->
+		select * from menu where menu_enable=1 order by menu_date desc
+	</select>
+	<select id="menuList" parameterType="java.lang.String" resultType="menuDTO">
+		<!-- 카테고리의 메뉴를 날짜별로 내림차순 -->
+		select * from menu where menu_category=#{menu_category} and menu_enable=1 
+		order by menu_date desc
+	</select>
+	<select id="menuListDisabled" resultType="menuDTO">
+      	<!-- 비활성화 된 전체메뉴를 날짜별로 내림차순 -->
+      	select * from menu where menu_enable=0 
+      	order by menu_date desc
+   	</select>
+	<select id="menuDetail" parameterType="int" resultType="menuDTO">
+		<!-- 메뉴의 상세정보 -->
+		select * from menu where menu_num=#{menu_num}
+	</select>
+	<update id="menuModify" parameterType="menuDTO">
+		<!-- 메뉴 수정 -->
+		update menu set menu_name=#{menu_name}, menu_img=#{menu_img}, 
+		menu_price=#{menu_price}, menu_content=#{menu_content}, 
+		menu_ingre=#{menu_ingre}, menu_kcal=#{menu_kcal}, 
+		menu_category=#{menu_category} where menu_num=#{menu_num}
+	</update>
+	
+	<update id="menuDisable" parameterType="int">
+		<!-- 메뉴 비활성화 -->
+		update menu set menu_enable=0 where menu_num=#{menu_num}
+	</update>
+	<update id="menuAble" parameterType="int">
+      	<!-- 메뉴 활성화 -->
+      	update menu set menu_enable=1 where menu_num=#{menu_num}
+   </update>
+	
+	<!-- 카트-->
+	<select id="check_menu" parameterType="java.util.Map" resultType="int">
+		<!-- 장바구니에 추가한 메뉴가 장바구니에 있는지 중복확인 -->
+		select count(*) from 
+      	(select c.* from cart c 
+      	left outer join menu m
+      	on m.menu_num = c.menu_num
+      	where m.menu_enable=1) 
+      	where cart_progress='progress' and
+      	mem_id=#{mem_id} and menu_num=#{menu_num}
+	</select>
+	<select id="check_cart" parameterType="java.lang.String" resultType="int">
+		<!-- 현재 진행중인 장바구니가 있는지 확인 -->
+		select count(*) from 
+      	(select c.* from cart c 
+      	left outer join menu m
+     	on m.menu_num = c.menu_num
+      	where m.menu_enable=1)
+      	where mem_id=#{mem_id} and 
+      	cart_progress='progress'
+	</select>
+	<select id="create_cart" resultType="int">
+		<!-- 장바구니 배정 -->
+		select cart_seq.nextval from dual
+	</select>
+	<select id="get_cart" parameterType="java.lang.String" resultType="cartDTO">
+		<!-- 현재 사용자의 진행중인 장바구니번호 호출 -->
+		select cart_num from 
+      	(select c.* from cart c 
+      	left outer join menu m
+      	on m.menu_num = c.menu_num
+      	where m.menu_enable=1) 
+      	where mem_id=#{mem_id} and
+      	cart_progress='progress'
+	</select>
+	<select id="num_to_name" parameterType="int" resultType="java.lang.String">
+		<!-- 메뉴 번호를 메뉴 이름으로 전환-->
+		select menu.menu_name from menu, cart 
+		where cart.menu_num = menu.menu_num 
+		and cart.menu_num=#{menu_num}
+	</select>
+	<select id="name_to_num" parameterType="java.lang.String" resultType="int">
+		<!-- 메뉴 이름을 메뉴 번호로 전환-->
+		select menu.menu_num from menu, cart
+		where cart.menu_num = menu.menu_num 
+		and menu.menu_name=#{menu_name} 
+		and cart_progress='progress'
+	</select>
+	
+	<insert id="add_cart" parameterType="cartDTO">
+		<!-- 장바구니에 추가 -->
+		insert into cart values(#{cart_num}, #{cart_qty}, #{mem_id}, #{menu_num}, 'progress')
+	</insert>
+	
+	<update id="plus_qty" parameterType="java.util.Map">
+		<!-- 중복된 메뉴추가가 있을시 수량 추가 -->
+		update cart set cart_qty = cart_qty + #{cart_qty} where 
+		cart_progress='progress' and
+		mem_id=#{mem_id} and menu_num=#{menu_num}
+	</update>
+	<update id="update_qty" parameterType="java.util.Map">
+		<!-- 장바구니에서 수정한 수량을 업데이트 -->
+		update (select cart.mem_id, menu.menu_name, 
+		cart.cart_qty, cart.cart_progress
+		from cart, menu where cart.menu_num = menu.menu_num) 
+		set cart_qty = #{cart_qty} where cart_progress='progress' and
+		mem_id=#{mem_id} and menu_name=#{menu_name}
+	</update>
+	<update id="ProgressDone" parameterType="java.util.Map">
+		<!-- 사용자의 진행중인 장바구니를 완료시킴 -->
+		update cart set cart_progress='done' 
+		where cart_num=#{cart_num} and mem_id=#{mem_id}
+	</update>
+	
+	<delete id="delete_cart" parameterType="java.util.Map">
+		<!-- 장바구니에서 물품 삭제 -->
+		delete cart where cart_num=#{cart_num} 
+		and menu_num=#{menu_num}
+		and mem_id=#{mem_id}
+	</delete>
+	
+	<!-- 카트 리스트 -->
+	<select id="cartList" parameterType="int" resultType="cartListDTO">
+		<!-- 장바구니에 등록된 목록 출력 -->
+		select menu.menu_img, menu.menu_name, cart.cart_qty, menu.menu_price 
+      	from cart
+      	left outer join menu
+      	on cart.menu_num = menu.menu_num
+     	 where cart.cart_num = #{cart_num} and menu.menu_enable=1
+	</select>
+	
+	<!-- 오더 -->
+	<insert id="orderInsert" parameterType="orderDTO">
+		insert into order_goods values 
+		(order_seq.nextval, #{order_price}, #{order_addr}, 
+		#{order_comment}, sysdate, #{cart_num}, #{mem_id}, #{loca_num})
+	</insert>
+	
+</mapper>

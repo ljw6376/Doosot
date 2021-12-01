@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.qnaMapper">
+	<select id="QnAList" parameterType="java.util.Map" resultType="qnadto">
+		<![CDATA[
+		select qna_seq, qna_subject, qna_id, qna_content, 
+		to_char(qna_date, 'YYYY.MM.DD') as qna_date from 
+		(select rownum rn, tt.* from 
+		(select * from QnA order by qna_seq desc) tt) 
+		where rn>=#{startNum} and rn<=#{endNum}	
+		]]>
+	</select>
+	
+	<select id="getTotalA" resultType="int">
+		select count(*) as cnt from QnA
+	</select>
+	
+	<select id="QnAWrite" parameterType="qnadto" resultType="int">
+		insert into QnA values
+		(qna_seq.nextval, #{qna_subject}, #{qna_id}, #{qna_content}, sysdate)
+	</select>
+	
+	<select id="QnAView" parameterType="int" resultType="qnadto">
+		select * from QnA where qna_seq=#{qna_seq}
+	</select>
+	
+	<select id="QnAReply" parameterType="int"  resultType="redto">
+		<![CDATA[
+		select QNA_REID, QNA_RECONT, QNA_REDATE from QnA left outer join Re on 
+		QnA.qna_seq = Re.qna_seq where QNA.qna_seq=#{qna_seq}
+		]]>
+	</select>
+	
+	<select id="QnAReplyForm" parameterType="redto" resultType="int">
+		insert into Re values (#{qna_seq}, #{qna_reId}, #{qna_reCont}, sysdate)
+	</select>
+</mapper>
+
+
+
+

@@ -1,0 +1,167 @@
+@charset "UTF-8";
+* {
+	padding: 0;
+	margin: 0;
+}
+html{
+	height:100%;
+}
+body {
+	margin: 0;
+	background-color: #ececec;
+}
+
+.flex {
+	position: relative;
+	margin: 0 auto;
+	padding-top:10px;
+	width: 1200px;
+	height: 30px;
+	text-align: right;
+	color: dimgray;
+	z-index: 2;
+}
+
+.flex a {text-decoration: none;}
+.flex a:link {color: dimgray;}
+.flex a:visited {color: dimgray;}
+
+.main_top_list {
+	position: relative;
+	margin: 0 auto;
+	width: 1200px;
+	height: 90px;
+	background-color: white;
+	z-index: 2;
+}
+.logo, .logo a, .logo p, .top_list{display:inline;}
+.logo{margin-left:30px;}
+.logo img{margin-top:21px;}
+
+.top_list{float:right;}
+.main_top_list ul li {
+	list-style-type: none;
+	float: left;
+	margin-left: 40px;
+}
+.main_top_list ul li a{
+text-decoration: none;
+font-size:17px;
+font-weight:bold;
+}
+.main_top_list ul li a:link{color: black;}
+.main_top_list ul li a:visited{color: black;}
+.main_top_list ul li a{padding:0 15px;}
+
+.top_list{
+padding-top:35px;
+padding-right:66px;
+}
+.content {
+	width: 1200px;
+	min-height:900px;
+	height: auto;
+	margin: 30px auto;
+	background-color: white;
+	display: flex;
+	flex-flow: row wrap;
+}
+
+.container{
+	width: 1200px;
+	height: 140px;
+	margin: 0 auto;
+	margin-bottom: 0;
+	background-color: white;
+	border-bottom: 2px solid #ececec;
+}
+
+.subject {
+	width: 1200px;
+	height: 140px;
+}
+
+.title {
+	display:inline;
+	font-size: 35px;
+	font-weight: 550;
+	float: left;
+	padding-top: 55px;
+	padding-left: 30px;
+}
+
+.title:after {
+	clear: left;
+}
+.list{
+	margin: 30px;
+	border: 1px solid #ececec;
+	padding:5px;
+}
+.list table{
+	width:750px;
+	text-align:center;
+}
+.list td{border-bottom: 1px solid #ececec; }
+#photo{width:200px; height:150px;}
+
+.order{
+	width: 378px;
+	height: 758px;
+	background: #FFC800;
+	display:flex;
+	flex-flow: column wrap;
+}
+#delivery{
+	width:378px;
+	height:380px;
+}
+#delivery .label{
+	font-size:20px;
+	font-weight:700;
+	color:dimgray;
+}
+#delivery td{padding-left:30px;}
+#delivery tr{height: 50px;}
+.short{width: 200px;}
+.long{width: 300px;}
+#delivery input,#delivery select{
+	border: none;
+	border-bottom: 1px solid orange;
+	background: #FFCD00;
+	font-size:15px;
+	text-align: center;
+	color:dimgray;
+}
+#calc{
+	width:378px;
+	height:300px;
+	border-bottom: 1px solid orange;
+}
+.order input[value="주문하기"]{
+	margin-top: 15px;
+	margin-left: 50px;
+	width:280px;
+	height:50px;
+	border:none;
+	background: dimgray;
+	color:white;
+	font-size: 20px;
+
+}
+footer {
+	width: 100%;
+	height: 300px;
+	margin: 0 auto;
+	margin-top:30px;
+	background: orange;
+	padding-top: 50px;
+}
+#footer_content{
+	position: relative;
+	width:1200px;
+	margin: 0 auto;
+}
+footer p{text-align:center; color:#3D3D3D;}
+#footer_head{margin:0 auto; font-size:17px;}
+#footer_foot{margin:0 auto; padding-top:30px;}

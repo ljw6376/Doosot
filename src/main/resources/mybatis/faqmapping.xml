@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.faqMapper">
+	<select id="FAQList" parameterType="java.util.Map" resultType="faqdto">
+		<![CDATA[
+		select faq_seq, faq_subject, faq_id, faq_content, faq_img,
+        to_char(faq_date, 'YYYY.MM.DD') as faq_date from 
+		(select rownum rn, tt.* from 
+		(select * from FAQ order by faq_seq desc) tt) 
+		where rn>=#{startNum} and rn<=#{endNum}]]>
+	</select>
+	
+	<select id="getTotalA" resultType="int">
+		select count(*) as cnt from FAQ
+	</select>
+	
+	<select id="FAQWrite" parameterType="faqdto" resultType="int">
+		insert into FAQ values
+		(faq_seq.nextval, #{faq_subject}, #{faq_id}, #{faq_content}, #{faq_img}, sysdate)
+	</select>
+	
+	<insert id="FAQModify" parameterType="faqdto">
+		update FAQ set faq_subject =#{faq_subject}, faq_img=#{faq_img}, 
+		faq_content=#{faq_content}, faq_date=sysdate where faq_seq=#{faq_seq} 
+	</insert>		
+	
+	<select id="FAQView" parameterType="int" resultType="faqdto">
+		select * from FAQ where faq_seq=#{faq_seq}
+	</select>
+	
+	<delete id="FAQDelete" parameterType="int">
+		delete FAQ where faq_seq=#{faq_seq}
+	</delete>
+	
+</mapper>

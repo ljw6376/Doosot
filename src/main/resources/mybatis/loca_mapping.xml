@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.LocaMapper">
+	<!-- loca -->
+	<!-- 리스트 불러오기 기능 -> 대외적 목록 -->
+	<select id="loca_List" parameterType="java.util.Map" resultType="locaDto">
+		<![CDATA[
+			select cc.* from 
+			(select rownum rn, tt.* from
+			(select * from loca where loca_valid = 'true'
+			order by loca_num desc) tt) cc
+			where rn>=#{startNum} and rn<=#{endNum}
+		]]>
+	</select>
+	
+	<!-- 검색 후 리스트 불러오기 기능 -> 대외적 기능 -->
+	<select id="loca_SearchList" parameterType="java.util.Map" resultType="locaDto">
+		<![CDATA[
+			select cc.* from 
+			(select rownum rn, tt.* from
+			(select * from loca where loca_valid = 'true'
+			and loca_addr like '%'||#{juso}||'%'
+			order by loca_num desc) tt) cc
+			where rn>=#{startNum} and rn<=#{endNum}
+		]]>
+	</select>	
+
+	<!-- 총 게시물 수 구하기 -> 대외적 목록 -->
+	<select id="loca_Total" resultType="int">
+		select count(*) as cnt from loca where loca_valid = 'true'
+	</select>
+	
+	<!-- 검색 후 게시물 수 구하기 -> 대외적 기능 -->
+	<select id="loca_TotalS" parameterType="String" resultType="int">
+		select count(*) as cnt from loca where loca_valid = 'true' and loca_addr like '%'||#{juso}||'%'
+	</select>	
+	
+	<!-- 전체 리스트 불러오기 - 관리자 기능 -->
+	<select id="loca_AdList" parameterType="java.util.Map" resultType="locaDto">
+		<![CDATA[
+			select cc.* from 
+			(select rownum rn, tt.* from
+			(select * from loca order by loca_num desc) tt) cc
+			where rn>=#{startNum} and rn<=#{endNum}
+		]]>
+	</select>	
+	
+	<!-- 전체 리스트 불러오기 - 관리자 기능 -->
+	<select id="loca_AdSearchList" parameterType="java.util.Map" resultType="locaDto">
+		<![CDATA[
+			select cc.* from 
+			(select rownum rn, tt.* from
+			(select * from loca where loca_addr like '%'||#{juso}||'%'
+			order by loca_num desc) tt) cc
+			where rn>=#{startNum} and rn<=#{endNum}
+		]]>
+	</select>	
+
+	<!-- 총 게시물 수 구하기 -> 관리자 목록 -->
+	<select id="loca_AdTotal" resultType="int">
+		select count(*) as cnt from loca
+	</select>
+	
+	<!-- 검색 후 게시물 수 구하기 -> 관리자 기능 -->
+	<select id="loca_AdTotalS" parameterType="String" resultType="int">
+		select count(*) as cnt from loca where loca_addr like '%'||#{juso}||'%'
+	</select>
+	
+	<!-- 매장이름 중복 확인 -->
+	<select id="isExist_loca_Name" parameterType="String" resultType="locaDto">
+		select * from loca where loca_name=#{loca_name}
+	</select>
+	
+
+	<!-- 지점 생성 작성 -->
+	<insert id="loca_Write" parameterType="locaDto">
+		insert into loca values
+		(loca_num.nextval, #{loca_name}, #{loca_addr}, #{loca_phone}, #{loca_img}, sysdate, 'true')
+	</insert>
+	
+	<!-- 지점 상세보기 -> 수정시 필요 -->
+	<select id="loca_View" parameterType="int" resultType="locaDto">
+		select * from loca where loca_num=#{loca_num}
+	</select>	
+	
+	<!-- 지점 삭제하기 -->
+	<select id="loca_Delete" parameterType="int">
+		delete loca where loca_num=#{loca_num}
+	</select>	
+
+	<!-- 지점 수정 -->
+	<insert id="loca_Corr" parameterType="eventDto">
+		update loca set loca_name =#{loca_name}, loca_valid=#{loca_valid}, loca_addr=#{loca_addr}, loca_phone=#{loca_phone}, loca_img=#{loca_img}, loca_date=sysdate where loca_num=#{loca_num}
+	</insert>	
+	
+</mapper>

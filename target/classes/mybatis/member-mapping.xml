@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.memberMapper">
+	<!-- 회원가입 -->
+	<select id="member_join" parameterType="memberdto" resultType="int">
+		<![CDATA[
+		insert into member (mem_id, mem_pw, mem_name,
+		mem_phone1, mem_phone2, mem_phone3, mem_addr,
+		mem_email1, mem_email2) values
+		(#{mem_id},#{mem_pw},#{mem_name},#{mem_phone1},
+		#{mem_phone2},#{mem_phone3},#{mem_addr},
+		#{mem_email1},#{mem_email2})
+		]]>
+	</select>
+	<!-- 이름, 관리자판단, 예치금 가져오기 -->
+	<select id="member_login" parameterType="memberdto" resultType="memberdto">
+		select mem_name,mem_addr,admin,mem_deposit from member where mem_id=#{mem_id} and mem_pw=#{mem_pw}
+	</select>
+	<!-- 예치금 충전하기 -->
+	<select id="reloading" parameterType="memberdto" resultType="int">
+		update member set mem_deposit=mem_deposit+#{mem_deposit} where mem_id=#{mem_id}
+	</select>
+	<!-- 충전된 예치금 가져오기 -->
+	<select id="get_deposit" parameterType="String" resultType="Integer">
+		select mem_deposit from member where mem_id=#{login_id}
+	</select>
+	<!-- 비밀번호 변경 -->
+	<select id="modify_pw" parameterType="java.util.Map" resultType="int">
+		update member set mem_pw=#{new_pw} where mem_id=#{login_id}
+	</select>
+	<!-- 회원 총인원수 가져오기 -->
+	<select id="total_mem" resultType="int">
+		select count(case when admin is null then 1 end ) as memCnt from member
+	</select>
+	<!-- 회원리스트 가져오기 -->
+	<select id="memberList" parameterType="java.util.Map" resultType="memberdto">
+		<![CDATA[
+			select mem_id, mem_name ,mem_phone1, mem_phone2, mem_phone3,
+        	mem_addr, mem_email1, mem_email2 from
+			(select rownum rn, tt.* from
+			(select * from member where admin is null order by mem_name) tt)
+			where rn>=#{startNum} and rn <=#{endNum}
+		]]>
+	</select>
+	<!-- 탈퇴전 cart 삭제 -->
+	<select id="delete_cart" parameterType="String" resultType="int">
+		delete cart where mem_id=#{login_id}
+	</select>
+	<!-- 탈퇴전 order 삭제 -->
+	<select id="delete_order" parameterType="String" resultType="int">
+		delete order_goods where mem_id=#{login_id}
+	</select>
+	<!-- 해당 아이디가 질문한 qna 번호들 가져오기 -->
+	<select id="get_qnaseqList" parameterType="String" resultType="qnaDTO">
+		select qna_seq from QnA where qna_id=#{login_id}
+	</select>
+	<!-- 탈퇴전 qna답글 삭제 -->
+	<select id="delete_re" parameterType="int" resultType="int">
+		delete Re where qna_seq=#{qna_seq}
+	</select>
+	<!-- 탈퇴전 qna 삭제 -->
+	<select id="delete_qna" parameterType="int" resultType="int">
+		delete QnA where qna_seq=#{qna_seq}
+	</select>
+	<!-- 회원탈퇴 -->
+	<select id="member_out" parameterType="String" resultType="int">
+		delete member where mem_id = #{login_id}
+	</select>
+	<!-- 회원정보 가져오기 -->
+	<select id="get_memInfo" parameterType="String" resultType="memberdto">
+		select * from member where mem_id=#{mem_id}
+	</select>
+	<!-- 회원 주문내역 총 갯수 가져오기 -->
+	<select id="total_order" parameterType="String" resultType="int">
+		select count(case when mem_id = #{login_id} then 0 end) as order_cnt from order_goods
+	</select>
+	<!-- 주문목록 가져오기 -->
+	<select id="order_seq" parameterType="java.util.Map" resultType="Integer">
+		<![CDATA[
+			select order_seq from 
+			(select rownum rn, tt.* from (select * from order_goods where mem_id = #{login_id} order by order_seq desc) tt) aa
+			where rn>=#{startNum} and rn <=#{endNum} order by order_seq desc
+		]]>
+	</select>
+	<!-- 주문번호로 주문내용 가져오기 -->
+	<select id="orderList" parameterType="int" resultType="orderListDTO">
+		<![CDATA[
+			select order_seq,bb.menu_name,order_date
+			from(select rownum rn, tt.* from (select * from order_goods order by order_seq) tt) aa
+			left outer join 
+			(select m.menu_name, c.cart_num from cart c left outer join menu m 
+			on m.menu_num = c.menu_num where c.cart_progress='done') bb
+			on aa.cart_num=bb.cart_num where order_seq = #{seq_num}
+		]]>
+	</select>
+	<!-- 주문 상세내역 가져오기 -->
+	<select id="get_order" parameterType="int" resultType="getOrderListDTO">
+		<![CDATA[
+			select menu_img, menu_price, menu_name, num.cart_qty, num.menu_num from menu right outer join
+			(select cart.menu_num,cart.cart_qty from cart where cart_num = 
+			(select cart_num from order_goods where order_seq = #{seq}))num  on menu.menu_num = num.menu_num
+		]]>
+	</select>
+	<!-- 문의내역 총 갯수 가져오기 -->
+	<select id="total_qna" parameterType="String" resultType="int">
+		select count(case when qna_id = #{login_id} then 0 end) as qna_cnt from QnA
+	</select>
+	<!-- 주문 상세내역 가져오기 -->
+	<select id="member_qnaList" parameterType="java.util.Map" resultType="memberqnadto">
+		<![CDATA[
+			select * from 
+			(select rownum rn, tt.* from
+			(select * from 
+			(select QnA.* from QnA left outer join member on member.mem_id = QnA.qna_id where QnA.qna_id = #{login_id} order by qna_date desc) qna
+			left outer join Re on qna.qna_seq = Re.qna_seq)tt)
+			where rn>=#{startNum} and rn<=#{endNum}
+		]]>
+	</select>
+	<!-- 문의내역 상세정보 가져오기 -->
+	<select id="member_qnaView" parameterType="java.util.Map" resultType="memberqnadto">
+		select * from (select QnA.* from QnA left outer join member on member.mem_id = QnA.qna_id where QnA.qna_id = #{login_id} order by qna_date desc) qna
+		left outer join Re on qna.qna_seq = Re.qna_seq where qna.qna_seq = #{qna_seq}
+	</select>
+	<!-- 이름, 전화번호로 아이디 가져오기 -->
+	<select id="member_findId" parameterType="memberdto" resultType="String">
+		select mem_id from member where mem_name=#{mem_name} and 
+		mem_phone1=#{mem_phone1} and mem_phone2=#{mem_phone2} and mem_phone3=#{mem_phone3}
+	</select>
+</mapper>

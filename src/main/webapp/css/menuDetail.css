@@ -1,0 +1,266 @@
+@charset "UTF-8";
+.container{
+	margin-bottom: 0;
+	border-bottom: 2px solid #ececec;
+}
+
+.title{
+	text-decoration: none;
+	color: black;
+	user-select: none;
+	cursor: pointer;
+}
+
+.content{
+	width: 1200px;
+	height: 600px;
+	margin: 30px auto;
+	margin-top: 0;
+	background-color: white;
+}
+
+#content{
+	width: 100%;
+	height: 100%;
+}
+
+#img{
+	width: 43%;
+	text-align: center;
+	display: inline-block;
+	float: left;
+}
+
+#img img{
+	width: 100%;
+	height: 600px;
+}
+
+#con{
+	width: 560px;
+	height: 500px;
+	margin-top: 50px;
+	margin-left: 60px;
+	display: inline-block;
+	float: left;
+}
+
+#con p{
+	margin: 6px 0;
+}
+
+#con_p1{
+	font-size: 12px;
+	font-weight: 900;
+	color: gray;
+}
+
+#con_p2{
+	font-size: 24px;
+	font-weight: 450;
+}
+
+#con_line1{
+	margin-top: 30px;
+	margin-bottom: 15px;
+	width: 35px;
+	border: 2px solid #373737;
+}
+
+#con_p3{
+	font-size: 15px;
+}
+
+#con_line2{
+	margin-top: 150px;
+	border: 1px solid #ececec;
+}
+
+#price{ display: flex; }
+
+#price #con_p4{
+	margin-left: auto;
+	font-size: 40px;
+	text-align: right;
+	color: orange;
+}
+
+#price #won{ 
+	font-size: 20px; 
+	color: orange;
+	line-height: 68px;
+}
+
+#qty{
+	display: flex;
+	justify-content: flex-end;
+	font-size: 30px;
+	margin-bottom: 30px;
+	margin-top: 10px;
+}
+
+#qty .qty_btn{
+	text-align: center;
+	background-color: orange;
+	margin: 0 15px;
+	width: 40px;
+	height: 40px;
+	line-height: 40px;
+	cursor: pointer;
+	user-select: none;
+}
+
+#qty #qyt_minus:hover, #qty #qty_plus:hover{
+	background-color: #f0b400;
+}
+
+#qty #food_qty{
+	text-align: center;
+	width: 40px;
+	height: 40px;
+}
+
+#qty #qty_minus{
+	margin-left: 25px;
+}
+
+.btn_list{
+	display: flex;
+}
+
+.btn{
+	font-size: 25px;
+	width: 120px;
+	height: 50px;
+	background-color: orange;
+	text-align: center;
+	line-height: 50px;
+	cursor: pointer;
+	user-select: none;
+}
+
+.btn:hover{
+	background-color: #f0b400;
+}
+
+#put_cart{
+	margin-left: auto;
+	width: 180px;
+}
+
+#set_order{
+	margin-left: 10px;
+}
+
+#detail #kcal{
+	width: 1200px;
+	margin: 30px auto;
+}
+
+#kcal #kcal_cal{
+	font-size: 35px;
+	font-weight: bold;
+	color: #5c5953;
+}
+
+#kcal #kcal_text{
+	font-size: 20px;
+	font-weight: bold;
+	color: #5c5953;
+}
+
+#detail #allergy{
+	width: 1200px;
+	margin: 30px auto;
+}
+
+#detail .detail_line{
+	display: inline-block;
+	width: 0;
+	height: 18px;
+	border: 3px solid #373737;
+}
+
+#detail .detail_text{
+	font-size: 24px;
+	font-weight: 600;
+	position: relative;
+	bottom: 3px;
+	margin-left: 10px;
+}
+
+#detail #allergy table{
+	width: 1200px;
+	border-top: 7px solid #373737;
+	border-bottom: 1px solid #373737;
+}
+
+#detail #allergy table td{
+	height: 45px;
+	text-align: center;
+}
+
+#allergy #category{
+	background-color: #cfc6bc;
+}
+
+#allergy #alg_have td{
+	font-size: 20px;
+	font-weight: 500;
+}
+
+.admin_bar{
+	display: flex;
+	width: 1200px;
+	height: 150px;
+	margin: 30px auto;
+	background-color: white;
+	align-items: center;
+}
+
+.admin_bar_list{
+	display: flex;
+	text-align: center;
+	margin-left: auto;
+	margin-right: 55px;
+}
+
+.bar_btn{
+	width: 140px;
+	height: 60x;
+	margin-left: 20px;
+	background-color: orange;
+	line-height: 60px;
+	cursor: pointer;
+	user-select: none;
+}
+
+.bar_btn:hover{
+	background-color: #f0b400;
+}
+
+.outline{
+	width: 1200px;
+	height: 350px;
+	margin: 30px auto;
+}
+
+.outline hr{ 
+	display: inline-block;
+	position: relative;
+	top: 10px;
+	width: 1050px;
+	border: 8px solid #373737;
+}
+
+#outlink{
+	margin-top: 80px;
+	display: flex;
+	justify-content: space-evenly;
+}
+
+#outlink div{
+	width: 200px;
+	height: 180px;
+	border: 1px solid #373737;
+}
